@@ -101,6 +101,17 @@ describe('getNextActiveItemId', () => {
       expect(getNextActiveItemId(...params)).toEqual(null);
     });
 
+    test('returns index null from itemCount 0', () => {
+      const params = getParams({
+        moveAmount,
+        baseIndex: 0,
+        itemCount: 0,
+        defaultActiveItemId: null,
+      });
+
+      expect(getNextActiveItemId(...params)).toEqual(null);
+    });
+
     test('returns last index from index 0 with defaultActiveItemId', () => {
       const params = getParams({
         moveAmount,
