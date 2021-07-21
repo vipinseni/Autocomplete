@@ -1,12 +1,16 @@
+import { evalCombiner } from './combine';
 import { preResolve, resolve, postResolve } from './resolve';
 import {
+  AutocompleteCombineSource,
+  AutocompleteCombineSourcesMap,
   AutocompleteScopeApi,
+  AutocompleteSource,
   AutocompleteState,
   AutocompleteStore,
   BaseItem,
   InternalAutocompleteOptions,
 } from './types';
-import { getActiveItem } from './utils';
+import { flatten, getActiveItem } from './utils';
 
 let lastStalledId: number | null = null;
 
@@ -97,6 +101,43 @@ export function onInput<TItem extends BaseItem>({
       )
         .then(resolve)
         .then((responses) => postResolve(responses, sources))
+        .then((collections) => {
+          const sourcesMap = collections.reduce<
+            AutocompleteCombineSourcesMap<TItem>
+          >(
+            (acc, collection) => ({
+              ...acc,
+              [collection.source.sourceId]: {
+                ...collection.source,
+                getItems() {
+                  return flatten<any>(collection.items);
+                },
+              },
+            }),
+            {}
+          );
+
+          const combinedSources = props.combine({
+            sources: sourcesMap,
+            state: store.getState(),
+          });
+
+          // return flatten(
+          //   flatten(
+          //     typeof combinedSources === 'function'
+          //       ? combinedSources()
+          //       : combinedSources
+          //   ).map((sourceOrFn) =>
+          //     typeof sourceOrFn === 'function' ? sourceOrFn() : sourceOrFn
+          //   )
+          // )
+          return flatten(evalCombiner(combinedSources)).map((source) => {
+            return {
+              source,
+              items: source.getItems(),
+            };
+          });
+        })
         .then((collections) => {
           setStatus('idle');
           setCollections(collections as any);

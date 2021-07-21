@@ -17,6 +17,10 @@ export function createCategoriesPlugin({
 }: CreateCategoriesPluginProps): AutocompletePlugin<CategoryRecord, undefined> {
   return {
     getSources({ query }) {
+      if (query) {
+        return [];
+      }
+
       return [
         {
           sourceId: 'categoriesPlugin',

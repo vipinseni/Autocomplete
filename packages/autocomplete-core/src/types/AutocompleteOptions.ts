@@ -5,6 +5,8 @@ import { AutocompleteEnvironment } from './AutocompleteEnvironment';
 import { AutocompleteNavigator } from './AutocompleteNavigator';
 import { AutocompletePlugin } from './AutocompletePlugin';
 import {
+  AutocompleteCombineSource,
+  AutocompleteCombineSourcesMap,
   AutocompleteSource,
   InternalAutocompleteSource,
 } from './AutocompleteSource';
@@ -44,6 +46,17 @@ interface OnStateChangeProps<TItem extends BaseItem>
    */
   prevState: AutocompleteState<TItem>;
 }
+
+type MaybeFunction<TType> = TType | (() => TType);
+
+export type CombineTransformer<TItem extends BaseItem> = MaybeFunction<
+  Array<AutocompleteCombineSource<TItem>>
+>;
+
+export type Combine = (params: {
+  sources: AutocompleteCombineSourcesMap<any>;
+  state: AutocompleteState<any>;
+}) => CombineTransformer<any>;
 
 export interface AutocompleteOptions<TItem extends BaseItem> {
   /**
@@ -165,6 +178,7 @@ export interface AutocompleteOptions<TItem extends BaseItem> {
    * @link https://www.algolia.com/doc/ui-libraries/autocomplete/api-reference/autocomplete-js/autocomplete/#param-plugins
    */
   plugins?: Array<AutocompletePlugin<any, any>>;
+  combine?: Combine;
 }
 
 // Props manipulated internally with default values.
@@ -186,4 +200,5 @@ export interface InternalAutocompleteOptions<TItem extends BaseItem>
   shouldPanelOpen(params: { state: AutocompleteState<TItem> }): boolean;
   onSubmit(params: OnSubmitParams<TItem>): void;
   onReset(params: OnResetParams<TItem>): void;
+  combine: Combine;
 }
