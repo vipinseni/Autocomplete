@@ -1,12 +1,11 @@
 /** @jsx h */
+import { autocomplete, AutocompleteSource } from '@algolia/autocomplete-js';
 import {
-  autocomplete,
   groupBy,
   limit,
   balance,
   uniqBy,
-  AutocompleteSource,
-} from '@algolia/autocomplete-js';
+} from '@algolia/autocomplete-preset-reshape';
 import { createQuerySuggestionsPlugin } from '@algolia/autocomplete-plugin-query-suggestions';
 import { createLocalStorageRecentSearchesPlugin } from '@algolia/autocomplete-plugin-recent-searches';
 import { h, Fragment } from 'preact';
@@ -45,7 +44,7 @@ autocomplete({
     categoriesPlugin,
     productsPlugin,
   ],
-  combine({ sources }) {
+  reshape({ sources }) {
     const {
       recentSearchesPlugin,
       querySuggestionsPlugin,
@@ -53,13 +52,13 @@ autocomplete({
       ...rest
     } = sources;
 
-    const combineSuggestions = pipe(
+    const reshapeSuggestions = pipe(
       uniqBy(({ source, item }) =>
         source.sourceId === 'querySuggestionsPlugin' ? item.query : item.label
       ),
       limit(4)
     );
-    const combineProducts = pipe(
+    const reshapeProducts = pipe(
       groupBy<ProductHit, AutocompleteSource<ProductHit>>(
         (hit) => hit.categories[0],
         {
@@ -83,9 +82,9 @@ autocomplete({
     );
 
     return [
-      combineSuggestions([recentSearchesPlugin, querySuggestionsPlugin]),
+      reshapeSuggestions([recentSearchesPlugin, querySuggestionsPlugin]),
       Object.values(rest),
-      combineProducts([products]),
+      reshapeProducts([products]),
     ];
   },
 });

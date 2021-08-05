@@ -101,7 +101,8 @@ You can find more on the [documentation](https://www.algolia.com/doc/ui-librarie
 | [`autocomplete-plugin-recent-searches`](packages/autocomplete-plugin-recent-searches) | A plugin to add recent searches to Autocomplete | [Documentation](https://www.algolia.com/doc/ui-libraries/autocomplete/api-reference/autocomplete-plugin-recent-searches) |
 | [`autocomplete-plugin-query-suggestions`](packages/autocomplete-plugin-query-suggestions) | A plugin to add query suggestions to Autocomplete | [Documentation](https://www.algolia.com/doc/ui-libraries/autocomplete/api-reference/autocomplete-plugin-query-suggestions) |
 | [`autocomplete-plugin-algolia-insights`](packages/autocomplete-plugin-algolia-insights) | A plugin to add Algolia Insights to Autocomplete | [Documentation](https://www.algolia.com/doc/ui-libraries/autocomplete/api-reference/autocomplete-plugin-algolia-insights) |
-| [`autocomplete-preset-algolia`](packages/autocomplete-preset-algolia) | Presets to use Algolia features with Autocomplete | [Documentation](https://www.algolia.com/doc/ui-libraries/autocomplete/api-reference/autocomplete-preset-algolia) |
+| [`autocomplete-preset-algolia`](packages/autocomplete-preset-algolia) | Presets functions for the Autocomplete Reshape API | [Documentation](https://www.algolia.com/doc/ui-libraries/autocomplete/api-reference/autocomplete-preset-reshape) |
+| [`autocomplete-preset-reshape`](packages/autocomplete-preset-reshape) | Presets to use Algolia features with Autocomplete | [Documentation](https://www.algolia.com/doc/ui-libraries/autocomplete/api-reference/autocomplete-preset-algolia) |
 | [`autocomplete-theme-classic`](packages/autocomplete-theme-classic) | Classic theme for Autocomplete | [Documentation](https://www.algolia.com/doc/ui-libraries/autocomplete/api-reference/autocomplete-theme-classic) |
 
 ## Showcase

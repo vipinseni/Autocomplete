@@ -1,16 +1,16 @@
-import { evalCombiner } from './combine';
+import { flatten } from '@algolia/autocomplete-shared';
+
+import { unwrapReshapeSources } from './reshape';
 import { preResolve, resolve, postResolve } from './resolve';
 import {
-  AutocompleteCombineSource,
-  AutocompleteCombineSourcesMap,
+  AutocompleteReshapeSourcesRecord,
   AutocompleteScopeApi,
-  AutocompleteSource,
   AutocompleteState,
   AutocompleteStore,
   BaseItem,
   InternalAutocompleteOptions,
 } from './types';
-import { flatten, getActiveItem } from './utils';
+import { getActiveItem } from './utils';
 
 let lastStalledId: number | null = null;
 
@@ -102,8 +102,10 @@ export function onInput<TItem extends BaseItem>({
         .then(resolve)
         .then((responses) => postResolve(responses, sources))
         .then((collections) => {
-          const sourcesMap = collections.reduce<
-            AutocompleteCombineSourcesMap<TItem>
+          // Sources are grouped by `sourceId` to conveniently pick them via destructuring.
+          // Example: `const { recentSearchesPlugin } = sourcesBySourceId`
+          const sourcesBySourceId = collections.reduce<
+            AutocompleteReshapeSourcesRecord<TItem>
           >(
             (acc, collection) => ({
               ...acc,
@@ -117,26 +119,21 @@ export function onInput<TItem extends BaseItem>({
             {}
           );
 
-          const combinedSources = props.combine({
-            sources: sourcesMap,
+          const reshapedSources = props.reshape({
+            sourcesBySourceId,
+            sources: Object.values(sourcesBySourceId),
             state: store.getState(),
           });
 
-          // return flatten(
-          //   flatten(
-          //     typeof combinedSources === 'function'
-          //       ? combinedSources()
-          //       : combinedSources
-          //   ).map((sourceOrFn) =>
-          //     typeof sourceOrFn === 'function' ? sourceOrFn() : sourceOrFn
-          //   )
-          // )
-          return flatten(evalCombiner(combinedSources)).map((source) => {
-            return {
-              source,
-              items: source.getItems(),
-            };
-          });
+          // We reconstruct the collections with the items modified by the Reshape API.
+          return flatten(unwrapReshapeSources(reshapedSources)).map(
+            (source) => {
+              return {
+                source,
+                items: source.getItems(),
+              };
+            }
+          );
         })
         .then((collections) => {
           setStatus('idle');

@@ -13,6 +13,10 @@
       "maxSize": "2.25 kB"
     },
     {
+      "path": "packages/autocomplete-preset-reshape/dist/umd/index.production.js",
+      "maxSize": "1.25 kB"
+    },
+    {
       "path": "packages/autocomplete-plugin-algolia-insights/dist/umd/index.production.js",
       "maxSize": "2 kB"
     },

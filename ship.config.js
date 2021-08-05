@@ -13,6 +13,7 @@ module.exports = {
       'packages/autocomplete-plugin-query-suggestions',
       'packages/autocomplete-plugin-recent-searches',
       'packages/autocomplete-preset-algolia',
+      'packages/autocomplete-preset-reshape',
       'packages/autocomplete-shared',
       'packages/autocomplete-theme-classic',
     ],
