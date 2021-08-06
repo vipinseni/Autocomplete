@@ -1,12 +1,10 @@
-import {
-  AutocompleteReshapeFunction,
-  unwrapReshapeSources,
-} from '@algolia/autocomplete-core';
+import { AutocompleteReshapeFunction } from '@algolia/autocomplete-core';
+
+import { normalizeReshapeSources } from './normalizeReshapeSources';
 
 export const limit: AutocompleteReshapeFunction<number> = (value) => {
-  return function runLimit(reshapeExpression) {
-    const sources = unwrapReshapeSources(reshapeExpression);
-
+  return function runLimit(...rawSources) {
+    const sources = normalizeReshapeSources(rawSources);
     const limitPerSource = Math.ceil(value / sources.length);
     let sharedLimitRemaining = value;
 

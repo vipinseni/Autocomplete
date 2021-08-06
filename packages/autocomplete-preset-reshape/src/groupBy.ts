@@ -2,9 +2,10 @@ import {
   AutocompleteReshapeFunction,
   AutocompleteSource,
   BaseItem,
-  unwrapReshapeSources,
 } from '@algolia/autocomplete-core';
 import { flatten } from '@algolia/autocomplete-shared';
+
+import { normalizeReshapeSources } from './normalizeReshapeSources';
 
 export type GroupByOptions<
   TItem extends BaseItem,
@@ -20,8 +21,8 @@ export const groupBy: AutocompleteReshapeFunction = <
   predicate: (value: TItem) => string,
   options: GroupByOptions<TItem, TSource>
 ) => {
-  return function runGroupBy(reshapeExpression) {
-    const sources = unwrapReshapeSources(reshapeExpression);
+  return function runGroupBy(...rawSources) {
+    const sources = normalizeReshapeSources(rawSources);
 
     if (sources.length === 0) {
       return [];

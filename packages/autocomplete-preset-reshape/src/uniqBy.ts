@@ -2,8 +2,9 @@ import {
   AutocompleteReshapeFunction,
   AutocompleteReshapeSource,
   BaseItem,
-  unwrapReshapeSources,
 } from '@algolia/autocomplete-core';
+
+import { normalizeReshapeSources } from './normalizeReshapeSources';
 
 type UniqByPredicate<TItem extends BaseItem> = (params: {
   source: AutocompleteReshapeSource<TItem>;
@@ -15,8 +16,8 @@ export const uniqBy: AutocompleteReshapeFunction<UniqByPredicate<any>> = <
 >(
   predicate
 ) => {
-  return function runUniqBy(reshapeExpression) {
-    const sources = unwrapReshapeSources(reshapeExpression);
+  return function runUniqBy(...rawSources) {
+    const sources = normalizeReshapeSources(rawSources);
     const seen: TItem[] = [];
 
     return sources.map((source) => {

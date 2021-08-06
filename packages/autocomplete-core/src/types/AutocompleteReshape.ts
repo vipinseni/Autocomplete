@@ -8,10 +8,9 @@ export type AutocompleteReshapeSource<
   getItems(): TItem[];
 };
 
-export type AutocompleteReshapeSourcesRecord<TItem extends BaseItem> = Record<
-  string,
-  AutocompleteReshapeSource<TItem>
->;
+export type AutocompleteReshapeSourcesBySourceId<
+  TItem extends BaseItem
+> = Record<string, AutocompleteReshapeSource<TItem>>;
 
 type MaybeFunction<TType> = TType | (() => TType);
 
@@ -23,7 +22,7 @@ export type Reshape<
   TState extends AutocompleteState<any> = AutocompleteState<any>
 > = (params: {
   sources: Array<AutocompleteReshapeSource<any>>;
-  sourcesBySourceId: AutocompleteReshapeSourcesRecord<any>;
+  sourcesBySourceId: AutocompleteReshapeSourcesBySourceId<any>;
   state: TState;
 }) => AutocompleteReshapeExpression<any>;
 
@@ -32,5 +31,5 @@ export type AutocompleteReshapeFunction<TParams = any> = <
 >(
   ...params: TParams[]
 ) => (
-  expression: AutocompleteReshapeExpression<TItem>
+  ...expressions: Array<AutocompleteReshapeSource<TItem>>
 ) => Array<AutocompleteReshapeSource<TItem>>;

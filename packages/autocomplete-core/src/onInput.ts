@@ -3,7 +3,7 @@ import { flatten } from '@algolia/autocomplete-shared';
 import { unwrapReshapeSources } from './reshape';
 import { preResolve, resolve, postResolve } from './resolve';
 import {
-  AutocompleteReshapeSourcesRecord,
+  AutocompleteReshapeSourcesBySourceId,
   AutocompleteScopeApi,
   AutocompleteState,
   AutocompleteStore,
@@ -105,7 +105,7 @@ export function onInput<TItem extends BaseItem>({
           // Sources are grouped by `sourceId` to conveniently pick them via destructuring.
           // Example: `const { recentSearchesPlugin } = sourcesBySourceId`
           const sourcesBySourceId = collections.reduce<
-            AutocompleteReshapeSourcesRecord<TItem>
+            AutocompleteReshapeSourcesBySourceId<TItem>
           >(
             (acc, collection) => ({
               ...acc,
@@ -119,21 +119,19 @@ export function onInput<TItem extends BaseItem>({
             {}
           );
 
-          const reshapedSources = props.reshape({
-            sourcesBySourceId,
+          const reshapeSources = props.reshape({
             sources: Object.values(sourcesBySourceId),
+            sourcesBySourceId,
             state: store.getState(),
           });
 
           // We reconstruct the collections with the items modified by the Reshape API.
-          return flatten(unwrapReshapeSources(reshapedSources)).map(
-            (source) => {
-              return {
-                source,
-                items: source.getItems(),
-              };
-            }
-          );
+          return flatten(unwrapReshapeSources(reshapeSources)).map((source) => {
+            return {
+              source,
+              items: source.getItems(),
+            };
+          });
         })
         .then((collections) => {
           setStatus('idle');

@@ -66,9 +66,9 @@ autocomplete({
     } = sourcesBySourceId;
 
     return [
-      combineSuggestions([recentSearchesPlugin, querySuggestionsPlugin]),
-      groupByCategory([products]),
-      ...Object.values(rest),
+      combineSuggestions(recentSearchesPlugin, querySuggestionsPlugin),
+      groupByCategory(products),
+      Object.values(rest),
     ];
   },
 });
