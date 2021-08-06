@@ -14,9 +14,9 @@ export type AutocompleteReshapeSourcesBySourceId<
 
 type MaybeFunction<TType> = TType | (() => TType);
 
-export type AutocompleteReshapeExpression<
-  TItem extends BaseItem
-> = MaybeFunction<Array<AutocompleteReshapeSource<TItem>>>;
+export type AutocompleteReshapeReturn<TItem extends BaseItem> = MaybeFunction<
+  Array<AutocompleteReshapeSource<TItem>>
+>;
 
 export type Reshape<
   TState extends AutocompleteState<any> = AutocompleteState<any>
@@ -24,7 +24,7 @@ export type Reshape<
   sources: Array<AutocompleteReshapeSource<any>>;
   sourcesBySourceId: AutocompleteReshapeSourcesBySourceId<any>;
   state: TState;
-}) => AutocompleteReshapeExpression<any>;
+}) => AutocompleteReshapeReturn<any>;
 
 export type AutocompleteReshapeFunction<TParams = any> = <
   TItem extends BaseItem

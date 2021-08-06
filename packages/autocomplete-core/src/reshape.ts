@@ -1,15 +1,14 @@
 import {
-  AutocompleteReshapeExpression,
+  AutocompleteReshapeReturn,
   AutocompleteReshapeSource,
   BaseItem,
 } from './types';
 
 export function unwrapReshapeSources<TItem extends BaseItem>(
-  reshapeExpression: AutocompleteReshapeExpression<TItem>
+  reshapeReturn: AutocompleteReshapeReturn<TItem>
 ): Array<AutocompleteReshapeSource<TItem>> {
   return (
-    (typeof reshapeExpression === 'function'
-      ? reshapeExpression()
-      : reshapeExpression) || []
+    (typeof reshapeReturn === 'function' ? reshapeReturn() : reshapeReturn) ||
+    []
   ).filter(Boolean);
 }
