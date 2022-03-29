@@ -21,9 +21,11 @@ export function setSmartPreview<TItem extends BaseItem>({
   setContext,
   refresh,
   preview,
+  setActiveItemId,
 }: smartPreviewParams<TItem>) {
   if (!dequal(state.context.preview, preview) && !isTouchDevice()) {
-    setContext({ preview, lastActiveItemId: state.activeItemId });
-    refresh();
+    const activeItemId = state.activeItemId;
+    setContext({ preview, lastActiveItemId: activeItemId });
+    refresh().then(() => setActiveItemId(activeItemId));
   }
 }

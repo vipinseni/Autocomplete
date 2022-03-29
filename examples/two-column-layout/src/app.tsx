@@ -65,19 +65,39 @@ autocomplete({
       },
     };
   },
-  reshape({ sourcesBySourceId }) {
+  reshape({ sourcesBySourceId, sources, state }) {
     const {
       recentSearchesPlugin: recentSearches,
       querySuggestionsPlugin: querySuggestions,
       categoriesPlugin: categories,
       brandsPlugin: brands,
       faqPlugin: faq,
+      productsPlugin: products,
+      articlesPlugin: articles,
+      popularPlugin: popular,
+      popularCategoriesPlugin: popularCategories,
       ...rest
     } = sourcesBySourceId;
 
+    const shouldDisplayPopularCategories = sources.every((source) => {
+      if (
+        source.sourceId === 'popularPlugin' ||
+        source.sourceId === 'popularCategoriesPlugin'
+      ) {
+        return true;
+      }
+      return source.getItems().length === 0;
+    });
+
     return [
       combine(recentSearches, querySuggestions, categories, brands, faq),
-      Object.values(rest),
+      [
+        !state.query && popular,
+        !(state.context.preview as FaqHit)?.title && products,
+        !(state.context.preview as FaqHit)?.title && articles,
+        ...Object.values(rest),
+        shouldDisplayPopularCategories && popularCategories,
+      ].filter(Boolean),
     ];
   },
   render({ elements, components, state, setContext, refresh, Fragment }, root) {
